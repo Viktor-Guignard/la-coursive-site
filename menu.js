@@ -19,13 +19,16 @@ function esc(s){
 function renderMenu(blocks, versionName){
   const mount = document.getElementById('menuMount');
   mount.innerHTML = '';
+  const cols = document.createElement('div');
+  cols.className = 'menu-cols';
+  mount.appendChild(cols);
   let section = null;
 
   const openSection = (titleHtml) => {
     section = document.createElement('div');
     section.className = 'menu-section';
     if(titleHtml) section.innerHTML = titleHtml;
-    mount.appendChild(section);
+    cols.appendChild(section);
   };
   openSection('');
 
