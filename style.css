@@ -57,6 +57,17 @@ h1,h2,h3{font-family:var(--font-t); font-weight:700; line-height:1.12; margin:0 
 }
 .nav-cta:hover{background:var(--or-clair);}
 
+/* Burger (mobile / tablette) */
+#burger{
+  display:none; flex-direction:column; justify-content:center; gap:5px;
+  width:42px; height:38px; padding:8px 9px;
+  background:none; border:1px solid rgba(246,240,228,.35); border-radius:8px; cursor:pointer;
+}
+#burger span{display:block; height:2px; background:var(--creme); border-radius:2px; transition:transform .2s, opacity .2s;}
+#nav.open #burger span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+#nav.open #burger span:nth-child(2){opacity:0;}
+#nav.open #burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
 /* ---------- Boutons ---------- */
 .btn{
   display:inline-block; text-decoration:none; font-weight:600; font-size:14.5px;
@@ -121,12 +132,29 @@ h1,h2,h3{font-family:var(--font-t); font-weight:700; line-height:1.12; margin:0 
 .section.alt{background:var(--blanc);}
 .section h2{font-size:clamp(28px,3.8vw,42px);}
 
-/* ---------- La carte (fond clair, mise en avant) ---------- */
-.carte{padding:90px 0; background:var(--blanc); border-bottom:1px solid #e9e0cc;}
+/* ---------- La carte : présentée comme une carte imprimée ---------- */
+.carte{padding:90px 0; background:var(--creme-2); border-bottom:1px solid #e9e0cc;}
 .carte h2{color:var(--noir);}
 .carte-note{color:var(--gris); font-size:13.5px; margin:-6px 0 36px;}
 .menu-loading{text-align:center; color:var(--gris); padding:60px 0;}
-.menu-cols{columns:2; column-gap:60px;}
+.menu-panel{
+  position:relative;
+  background:var(--blanc);
+  border:1px solid #e0d5b8;
+  box-shadow:0 24px 70px rgba(20,17,16,.14), 0 2px 8px rgba(20,17,16,.06);
+  padding:70px 64px 54px;
+  max-width:1000px; margin:0 auto;
+}
+.menu-panel::before{
+  content:''; position:absolute; inset:12px;
+  border:1px solid rgba(201,162,39,.4); pointer-events:none;
+}
+.menu-badge{
+  width:74px; height:74px; position:absolute; top:-37px; left:50%;
+  transform:translateX(-50%);
+  filter:drop-shadow(0 6px 18px rgba(20,17,16,.25));
+}
+.menu-cols{columns:2; column-gap:56px;}
 .menu-section{break-inside:avoid; margin:0 0 34px;}
 .menu-section h3{
   font-size:20px; color:var(--or-fonce); text-transform:uppercase; letter-spacing:.05em;
@@ -196,18 +224,60 @@ footer .base{text-align:center; border-top:1px solid rgba(201,162,39,.18); paddi
 footer .base a{color:var(--or-clair); text-decoration:none;}
 footer .tiny{font-size:11px; opacity:.65; margin-top:6px;}
 
-/* ---------- Responsive ---------- */
+/* =====================================================
+   Responsive — desktop large / desktop / tablette / mobile
+   ===================================================== */
+
+/* Desktop large : la carte respire davantage */
+@media (min-width:1400px){
+  .menu-panel{max-width:1080px; padding:78px 84px 60px;}
+  .menu-cols{column-gap:72px;}
+}
+
+/* Tablette paysage / petit desktop */
+@media (max-width:1100px){
+  .resto-cards{grid-template-columns:repeat(3,1fr); gap:14px;}
+  .resto-card{padding:26px 16px 24px;}
+  .two-cols{gap:40px;}
+  .menu-panel{padding:60px 40px 44px;}
+}
+
+/* Tablette portrait */
 @media (max-width:920px){
-  .nav-links{display:none;}
+  #burger{display:flex;}
+  .nav-links{
+    display:none; position:absolute; top:100%; left:0; right:0;
+    flex-direction:column; gap:0; background:rgba(20,17,16,.97);
+    border-bottom:1px solid rgba(201,162,39,.25);
+    padding:8px 0 12px;
+  }
+  #nav.open .nav-links{display:flex;}
+  .nav-links a{padding:13px 26px; border-bottom:none; font-size:14px;}
+  .nav-links a.active{background:rgba(201,162,39,.12);}
+
   .two-cols, .contact-grid{grid-template-columns:1fr; gap:40px;}
   .strip{grid-template-columns:repeat(2,1fr);}
-  .resto-cards{grid-template-columns:1fr; max-width:460px;}
-  .menu-cols{columns:1;}
-  .foot-grid{grid-template-columns:1fr;}
+  .resto-cards{grid-template-columns:1fr; max-width:480px;}
+  .foot-grid{grid-template-columns:1fr; gap:20px;}
   .section,.carte,.contact,.galerie{padding:60px 0;}
+  .hero{min-height:70svh; padding:110px 20px 60px;}
+  .hero-light{padding:130px 20px 54px;}
+  .menu-cols{columns:2; column-gap:36px;}
+  .pics{flex-direction:row; flex-wrap:wrap;}
+  .pics img{flex:1 1 45%; min-width:220px; object-fit:cover;}
 }
-@media (max-width:560px){
+
+/* Mobile */
+@media (max-width:640px){
+  .menu-cols{columns:1;}
+  .menu-panel{padding:52px 22px 34px;}
+  .menu-panel::before{inset:8px;}
+  .menu-badge{width:60px; height:60px; top:-30px;}
   .strip{grid-template-columns:1fr;}
   .nav-cta{padding:8px 12px; font-size:12.5px;}
   .nav-brand span{display:none;}
+  .btn.big{font-size:16px; padding:15px 28px;}
+  .hero-actions .btn{width:100%; text-align:center;}
+  .fiche .cartes-btns .btn{width:100%; text-align:center;}
+  .hero-logo{width:104px;}
 }

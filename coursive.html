@@ -11,7 +11,7 @@
 <meta property="og:image" content="img/salle-01.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
@@ -20,6 +20,9 @@
     <img src="img/logo-or.png" alt="">
     <span>Méribel <em>Restaurants</em></span>
   </a>
+  <button id="burger" aria-label="Menu" onclick="document.getElementById('nav').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
   <div class="nav-links">
     <a href="index.html">Home</a>
     <a href="igloo.html">L'Igloo</a>
@@ -42,15 +45,6 @@
   </div>
 </header>
 
-<section id="carte" class="carte">
-  <div class="wrap">
-    <p class="kicker center">La carte</p>
-    <h2 class="center">Tout est fait maison</h2>
-    <p class="carte-note center">Carte mise à jour en direct par la maison<span id="carteDate"></span>. Prix nets, service compris.</p>
-    <div id="menuMount"><div class="menu-loading">Chargement de la carte…</div></div>
-  </div>
-</section>
-
 <section id="maison" class="section">
   <div class="wrap two-cols">
     <div class="txt">
@@ -64,6 +58,18 @@
       <img src="img/salon-02.jpg" alt="Le salon et ses fauteuils de velours" loading="lazy">
       <img src="img/bar-01.jpg" alt="Le bar en boiseries" loading="lazy">
       <img src="img/salle-01.jpg" alt="La salle du restaurant à l'étage" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section id="carte" class="carte">
+  <div class="wrap">
+    <p class="kicker center">La carte</p>
+    <h2 class="center">Tout est fait maison</h2>
+    <p class="carte-note center">Carte mise à jour en direct par la maison<span id="carteDate"></span>. Prix nets, service compris.</p>
+    <div class="menu-panel">
+      <img class="menu-badge" src="img/logo-or.png" alt="">
+      <div id="menuMount"><div class="menu-loading">Chargement de la carte…</div></div>
     </div>
   </div>
 </section>
@@ -137,6 +143,6 @@
   </div>
 </footer>
 
-<script src="menu.js?v=2"></script>
+<script src="menu.js?v=3"></script>
 </body>
 </html>
