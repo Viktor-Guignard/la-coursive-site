@@ -166,6 +166,9 @@ h1,h2,h3{font-family:var(--font-t); font-weight:700; line-height:1.12; margin:0 
 .menu-item .n .en{display:block; font-size:11.5px; font-style:italic; font-weight:300; color:var(--gris);}
 .menu-item .dots{flex:1; border-bottom:1px dotted #c8bfa8; min-width:16px; transform:translateY(-4px);}
 .menu-item .p{font-size:13.5px; font-weight:600; color:var(--or-fonce); white-space:nowrap;}
+.item-tag{width:13px; height:13px; margin-left:5px; vertical-align:-2px; display:inline-block;}
+.menu-image{display:flex; justify-content:center; margin:8px 0 14px;}
+.menu-image img{max-width:100%; height:auto;}
 .menu-formule{color:var(--or-fonce); font-weight:500; font-size:14.5px; padding:2px 0;}
 .menu-formule.heading{font-family:var(--font-t); font-size:21px; font-weight:700; color:var(--noir); margin-top:8px;}
 .menu-note{font-size:11.5px; font-style:italic; color:var(--gris); padding:5px 0;}
