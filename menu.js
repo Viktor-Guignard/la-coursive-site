@@ -25,6 +25,7 @@ function renderMenu(blocks, updatedAt){
   openSection('');
 
   (blocks||[]).forEach(b => {
+    if(b.hidden) return;   // plat masqué temporairement : jamais affiché côté client
     switch(b.type){
       case 'section':
         openSection(`<h3>${esc(b.fr)}${b.en!=null&&b.en!=='' ? ' <span class="en">/ '+esc(b.en)+'</span>' : ''}</h3>`);
