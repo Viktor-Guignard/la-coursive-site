@@ -250,7 +250,7 @@ footer .tiny{font-size:11px; opacity:.65; margin-top:6px;}
   #burger{display:flex;}
   .nav-links{
     display:none; position:absolute; top:100%; left:0; right:0;
-    flex-direction:column; gap:0; background:rgba(20,17,16,.97);
+    flex-direction:column; gap:0; background:#141110;
     border-bottom:1px solid rgba(201,162,39,.25);
     padding:8px 0 12px;
   }
