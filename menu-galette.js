@@ -5,8 +5,8 @@
 (function () {
   const OWNER = 'Viktor-Guignard', REPO = 'La-galette', BRANCH = 'main';
   const RAW = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/published.json`;
-  const PUBLIC_MENU_URL = 'https://viktor-guignard.github.io/La-galette/carte.html';
-  const ASSET_BASE = 'https://viktor-guignard.github.io/La-galette/';
+  const PUBLIC_MENU_URL = 'carte-galette/carte.html';
+  const ASSET_BASE = 'carte-galette/';
   /* cartes montrées sur le site, dans cet ordre (les autres restent sur la page du QR) */
   const SHOW = ['carte', 'pizzas', 'emporter'];
   const LABELS = { carte: 'La carte', pizzas: 'Pizzas', emporter: 'À emporter' };

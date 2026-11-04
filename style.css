@@ -39,7 +39,7 @@ h1,h2,h3{font-family:var(--font-t); font-weight:700; line-height:1.12; margin:0 
   border-bottom:1px solid rgba(201,162,39,.25);
 }
 .nav-brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--creme); margin-right:auto;}
-.nav-brand img{width:36px; height:36px; border-radius:50%;}
+.nav-brand img{width:38px; height:38px; border-radius:50%;}
 .nav-brand span{font-family:var(--font-t); font-size:18px; font-weight:700;}
 .nav-brand em{font-style:normal; color:var(--or-clair);}
 .nav-links{display:flex; gap:20px;}
