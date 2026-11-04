@@ -5,6 +5,8 @@ const OWNER = 'Viktor-Guignard', REPO = 'la-coursive-carte', BRANCH = 'main';
 const RAW = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/published.json`;
 const PUBLIC_MENU_URL = 'https://viktor-guignard.github.io/la-coursive-carte/carte.html';
 const CARTE_ASSET_BASE = 'https://viktor-guignard.github.io/la-coursive-carte/';
+/* Prix à l'écran : « 23 » sur la carte imprimée → « 23€ » ici, comme les autres cartes. */
+function webPrice(p) { p = String(p || '').trim(); return p && !/€/.test(p) && /\d$/.test(p) ? p + '€' : p; }
 
 function esc(s){ const d=document.createElement('div'); d.textContent=s==null?'':s; return d.innerHTML; }
 function assetUrl(src){ return src && !/^https?:/.test(src) ? CARTE_ASSET_BASE + src : (src||''); }
@@ -33,7 +35,7 @@ function renderMenu(blocks, updatedAt){
       case 'item': {
         const el = document.createElement('div'); el.className='menu-item';
         const tags = (b.tags||[]).map(t => TAG_ICONS[t] ? `<img class="item-tag" src="${assetUrl('assets/'+TAG_ICONS[t].key)}" alt="${TAG_ICONS[t].label}" title="${TAG_ICONS[t].label}">` : '').join('');
-        el.innerHTML = `<div class="n">${esc(b.fr)}${tags}${b.en?'<span class="en">'+esc(b.en)+'</span>':''}</div><div class="dots"></div>${b.price?'<div class="p">'+esc(b.price)+'</div>':''}`;
+        el.innerHTML = `<div class="n">${esc(b.fr)}${tags}${b.en?'<span class="en">'+esc(b.en)+'</span>':''}</div><div class="dots"></div>${b.price?'<div class="p">'+esc(webPrice(b.price))+'</div>':''}`;
         section.appendChild(el); break;
       }
       case 'formule': {
