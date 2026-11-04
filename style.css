@@ -306,3 +306,10 @@ footer .tiny{font-size:11px; opacity:.65; margin-top:6px;}
 .menu-langs{display:flex; justify-content:center; gap:6px; margin:-8px 0 16px; flex-wrap:wrap;}
 .menu-langs button{font-family:var(--font-b); font-size:12px; font-weight:500; background:none; border:1px solid #e0d5b8; border-radius:20px; padding:5px 11px; cursor:pointer; color:var(--noir);}
 .menu-langs button.active{border-color:var(--or-fonce); color:var(--or-fonce); background:rgba(201,162,39,.08);}
+.menu-cols.one-col{columns:1; max-width:720px; margin:0 auto;}
+.menu-item .n .sub{text-transform:none;}
+@media (max-width:600px){
+  /* doubles prix (« Petit 17 / Grand 22 € ») : sous le nom, sans écraser le plat */
+  .menu-item{flex-wrap:wrap;}
+  .menu-item .p{white-space:normal; text-align:right; max-width:42%;}
+}

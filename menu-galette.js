@@ -14,6 +14,14 @@
   const I18N = window.CarteI18n;
   let LANG = I18N ? I18N.preferred() : 'fr';
   let lastPub = null, activeKey = null;
+  const PRICE = p => I18N ? I18N.price(p) : p;
+  /* textes de la section « La carte » du site */
+  const PAGE = {
+    fr: { kicker: 'La carte', title: 'Savoyard, pizzas, galettes & crêpes', note: 'Carte tenue à jour par la maison', net: 'Prix nets, service compris.', all: 'Ouvrir la carte sur mon téléphone ↗', updated: ' — mise à jour le ' },
+    en: { kicker: 'The menu', title: 'Savoyard dishes, pizzas, galettes & crêpes', note: 'Menu kept up to date by the house', net: 'Net prices, service included.', all: 'Open the menu on my phone ↗', updated: ' — updated on ' },
+    it: { kicker: 'Il menu', title: 'Cucina savoiarda, pizze, galette e crêpe', note: 'Menu aggiornato dalla casa', net: 'Prezzi netti, servizio incluso.', all: 'Apri il menu sul telefono ↗', updated: ' — aggiornato il ' },
+    de: { kicker: 'Die Speisekarte', title: 'Savoyardische Küche, Pizzen, Galettes & Crêpes', note: 'Vom Haus aktuell gehalten', net: 'Nettopreise, Service inbegriffen.', all: 'Speisekarte auf dem Handy öffnen ↗', updated: ' — aktualisiert am ' },
+  };
 
   function esc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
   const TAG_ICONS = {
@@ -27,7 +35,7 @@
 
   function renderMenu(blocks) {
     const cols = document.createElement('div');
-    cols.className = 'menu-cols';
+    cols.className = 'menu-cols' + ((blocks || []).filter(b => b.type === 'section').length > 8 ? ' one-col' : '');
     let section = null, wineCols = ['37,5 cl', '50 cl', '75 cl', '150 cl'];
     const open = html => { section = document.createElement('div'); section.className = 'menu-section'; if (html) section.innerHTML = html; cols.appendChild(section); };
     const add = el => { if (!section) open(''); section.appendChild(el); };
@@ -43,14 +51,14 @@
           break;
         case 'item': {
           const lines = [b.desc, b.sub].filter(Boolean).map(t => `<span class="sub">${esc(t)}</span>`).join('');
-          add(div('menu-item', `<div class="n">${esc(b.fr)}${tags(b)}${lines}${b.en ? '<span class="en">' + esc(b.en) + '</span>' : ''}</div><div class="dots"></div>${b.price ? '<div class="p">' + esc(b.price) + '</div>' : ''}`));
+          add(div('menu-item', `<div class="n">${esc(b.fr)}${tags(b)}${lines}${b.en ? '<span class="en">' + esc(b.en) + '</span>' : ''}</div><div class="dots"></div>${b.price ? '<div class="p">' + esc(PRICE(b.price)) + '</div>' : ''}`));
           break;
         }
         case 'winehead':
           wineCols = [b.c1, b.c2, b.c3, b.c4];
           break;
         case 'wine': {
-          const p = ['p1', 'p2', 'p3', 'p4'].map((f, i) => b[f] ? `<span><small>${esc(wineCols[i] || '')}</small> ${esc(b[f])}</span>` : '').filter(Boolean).join('');
+          const p = ['p1', 'p2', 'p3', 'p4'].map((f, i) => b[f] ? `<span><small>${esc(wineCols[i] || '')}</small> ${esc(PRICE(b[f]))}</span>` : '').filter(Boolean).join('');
           add(div('menu-item', `<div class="n">${esc(b.fr)}${tags(b)}${b.desc ? '<span class="sub">' + esc(b.desc) + '</span>' : ''}</div><div class="dots"></div><div class="p wines">${p}</div>`));
           break;
         }
@@ -63,7 +71,7 @@
         case 'line':
           if (b.variant === 'title') open('');
           if (b.variant === 'stars') break;
-          add(div('menu-line v-' + (b.variant || 'main'), esc(b.text) + (b.price ? ' <em>' + esc(b.price) + '</em>' : '')));
+          add(div('menu-line v-' + (b.variant || 'main'), esc(b.text) + (b.price ? ' <em>' + esc(PRICE(b.price)) + '</em>' : '')));
           break;
         case 'note':
           add(div('menu-note', esc(b.text)));
@@ -77,6 +85,8 @@
   function build(pub) {
     lastPub = pub;
     const mount = document.getElementById('menuMount');
+    const P = PAGE[LANG] || PAGE.fr;
+    document.querySelectorAll('#carte [data-i18n]').forEach(el => { if (P[el.dataset.i18n]) el.textContent = P[el.dataset.i18n]; });
     const menus = SHOW.map(k => (pub.menus || []).find(m => m.key === k)).filter(m => m && (m.blocks || []).length);
     if (!menus.length) throw new Error('aucune carte publiée');
     mount.innerHTML = '';
@@ -116,7 +126,7 @@
     });
     if (menus.length < 2) tabs.style.display = 'none';
     const dEl = document.getElementById('carteDate');
-    if (dEl && pub.updatedAt) { const d = new Date(pub.updatedAt); if (!isNaN(d)) dEl.textContent = ' — mise à jour le ' + d.toLocaleDateString('fr-FR'); }
+    if (dEl && pub.updatedAt) { const d = new Date(pub.updatedAt); if (!isNaN(d)) dEl.textContent = (PAGE[LANG] || PAGE.fr).updated + d.toLocaleDateString({ fr: 'fr-FR', en: 'en-GB', it: 'it-IT', de: 'de-DE' }[LANG] || 'fr-FR'); }
   }
 
   (async function load() {
