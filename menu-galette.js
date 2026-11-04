@@ -10,6 +10,10 @@
   /* cartes montrées sur le site, dans cet ordre (les autres restent sur la page du QR) */
   const SHOW = ['carte', 'pizzas', 'emporter'];
   const LABELS = { carte: 'La carte', pizzas: 'Pizzas', emporter: 'À emporter' };
+  /* langue du visiteur (FR · EN · IT · DE), mémorisée ; traductions stockées dans la carte */
+  const I18N = window.CarteI18n;
+  let LANG = I18N ? I18N.preferred() : 'fr';
+  let lastPub = null, activeKey = null;
 
   function esc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
   const TAG_ICONS = {
@@ -19,7 +23,7 @@
     coeur: { key: 'icon-coeur.svg', label: 'Coup de cœur' },
   };
   const tags = b => (b.tags || []).map(t => TAG_ICONS[t]
-    ? `<img class="item-tag${t === 'new' ? ' tag-new' : ''}" src="${ASSET_BASE}assets/${TAG_ICONS[t].key}" alt="${TAG_ICONS[t].label}" title="${TAG_ICONS[t].label}">` : '').join('');
+    ? `<img class="item-tag${t === 'new' ? ' tag-new' : ''}" src="${ASSET_BASE}assets/${TAG_ICONS[t].key}" alt="${I18N ? I18N.ui(LANG, t) : TAG_ICONS[t].label}" title="${I18N ? I18N.ui(LANG, t) : TAG_ICONS[t].label}">` : '').join('');
 
   function renderMenu(blocks) {
     const cols = document.createElement('div');
@@ -29,8 +33,10 @@
     const add = el => { if (!section) open(''); section.appendChild(el); };
     const div = (cls, html) => { const el = document.createElement('div'); el.className = cls; el.innerHTML = html; return el; };
 
-    (blocks || []).forEach(b => {
-      if (b.hidden) return;              // plat masqué temporairement : jamais affiché
+    (blocks || []).forEach(b0 => {
+      if (b0.hidden) return;              // plat masqué temporairement : jamais affiché
+      const b = I18N ? I18N.view(b0, LANG) : b0;
+      if (b.__skip) return;
       switch (b.type) {
         case 'section':
           open(`<h3>${esc(b.fr)}${tags(b)}</h3>`);
@@ -69,25 +75,42 @@
   }
 
   function build(pub) {
+    lastPub = pub;
     const mount = document.getElementById('menuMount');
     const menus = SHOW.map(k => (pub.menus || []).find(m => m.key === k)).filter(m => m && (m.blocks || []).length);
     if (!menus.length) throw new Error('aucune carte publiée');
     mount.innerHTML = '';
+    if (!menus.some(m => m.key === activeKey)) activeKey = menus[0].key;
+    /* drapeaux de langue */
+    if (I18N) {
+      const langs = document.createElement('div');
+      langs.className = 'menu-langs';
+      I18N.LANGS.forEach(l => {
+        const b = document.createElement('button');
+        b.innerHTML = `<span>${l.flag}</span> ${l.short}`;
+        b.title = l.label;
+        b.className = l.code === LANG ? 'active' : '';
+        b.onclick = () => { if (l.code !== LANG) { LANG = l.code; I18N.remember(LANG); build(lastPub); } };
+        langs.appendChild(b);
+      });
+      mount.appendChild(langs);
+    }
     const tabs = document.createElement('div');
     tabs.className = 'menu-tabs';
     mount.appendChild(tabs);
     const panels = menus.map((m, i) => {
       const btn = document.createElement('button');
-      btn.textContent = LABELS[m.key] || m.label || m.key;
-      btn.className = i === 0 ? 'active' : '';
+      btn.textContent = I18N ? I18N.menuLabel(m.key, LANG, LABELS[m.key]) : (LABELS[m.key] || m.label || m.key);
+      btn.className = m.key === activeKey ? 'active' : '';
       tabs.appendChild(btn);
       const panel = renderMenu(m.blocks);
-      panel.style.display = i === 0 ? '' : 'none';
+      panel.style.display = m.key === activeKey ? '' : 'none';
       mount.appendChild(panel);
       btn.addEventListener('click', () => {
         tabs.querySelectorAll('button').forEach(x => x.classList.remove('active'));
         btn.classList.add('active');
         panels.forEach((p, j) => p.style.display = j === i ? '' : 'none');
+        activeKey = m.key;
       });
       return panel;
     });

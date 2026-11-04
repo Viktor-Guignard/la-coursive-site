@@ -303,3 +303,6 @@ footer .tiny{font-size:11px; opacity:.65; margin-top:6px;}
 .menu-line.v-title em{font-style:normal; color:var(--or-fonce);}
 .menu-line.v-sub, .menu-line.v-small{font-size:11.5px; font-weight:300; font-style:italic; color:var(--gris);}
 .menu-line.v-or{font-size:12px; font-style:italic; font-weight:300; color:var(--gris);}
+.menu-langs{display:flex; justify-content:center; gap:6px; margin:-8px 0 16px; flex-wrap:wrap;}
+.menu-langs button{font-family:var(--font-b); font-size:12px; font-weight:500; background:none; border:1px solid #e0d5b8; border-radius:20px; padding:5px 11px; cursor:pointer; color:var(--noir);}
+.menu-langs button.active{border-color:var(--or-fonce); color:var(--or-fonce); background:rgba(201,162,39,.08);}
