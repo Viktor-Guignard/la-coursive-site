@@ -8,7 +8,7 @@
 <link rel="icon" href="img/logo-galette.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -42,9 +42,22 @@
     <h2>Pour le plus grand plaisir de tous les palais</h2>
     <p>Idéalement située au centre de Méribel, <strong>La Galette</strong> propose une carte riche et variée dans un cadre typiquement savoyard. À toute heure de la journée, <strong>Valérie et Christophe</strong> vous font découvrir les <strong>spécialités savoyardes</strong> de la maison, les pizzas, les galettes et les crêpes, dans une ambiance simple et accueillante.</p>
     <div class="cartes-btns">
-      <a class="btn gold" href="https://www.meribel-restaurants.com/images/menugalette2026.pdf" target="_blank" rel="noopener">Carte du restaurant (PDF)</a>
-      <a class="btn dark" href="https://www.meribel-restaurants.com/images/GALETTEEMPORTER.pdf" target="_blank" rel="noopener">Carte à emporter (PDF)</a>
+      <a class="btn gold" href="#carte">Voir la carte</a>
+      <a class="btn dark" href="https://viktor-guignard.github.io/La-galette/carte.html" target="_blank" rel="noopener">Toutes nos cartes (mobile) ↗</a>
     </div>
+  </div>
+</section>
+
+<section id="carte" class="carte carte-galette">
+  <div class="wrap">
+    <p class="kicker center">La carte</p>
+    <h2 class="center">Savoyard, pizzas, galettes &amp; crêpes</h2>
+    <p class="carte-note center">Carte mise à jour en direct par la maison<span id="carteDate"></span>. Prix nets, service compris.</p>
+    <div class="menu-panel">
+      <img class="menu-badge" src="img/logo-galette.jpg" alt="">
+      <div id="menuMount"><div class="menu-loading">Chargement de la carte…</div></div>
+    </div>
+    <p class="pdf-line"><a class="btn dark" href="https://viktor-guignard.github.io/La-galette/carte.html" target="_blank" rel="noopener">Voir toutes les cartes — boissons, vins, pizzas en anglais ↗</a></p>
   </div>
 </section>
 
@@ -93,5 +106,6 @@
   </div>
 </footer>
 
+<script src="menu-galette.js?v=1"></script>
 </body>
 </html>

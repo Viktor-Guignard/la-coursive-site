@@ -284,3 +284,22 @@ footer .tiny{font-size:11px; opacity:.65; margin-top:6px;}
   .fiche .cartes-btns .btn{width:100%; text-align:center;}
   .hero-logo{width:104px;}
 }
+
+/* ---------- Carte La Galette (menu-galette.js) ---------- */
+.carte-galette .menu-badge{border-radius:12px; width:78px; height:78px; top:-39px; object-fit:cover;}
+.menu-tabs{display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:0 0 34px;}
+.menu-tabs button{
+  font-family:var(--font-b); font-size:13px; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+  background:none; border:1px solid #d8cba9; color:var(--noir); border-radius:30px; padding:8px 18px; cursor:pointer;
+}
+.menu-tabs button.active{background:var(--noir); border-color:var(--noir); color:var(--creme);}
+.menu-item .n .sub{display:block; font-size:12px; font-weight:300; color:#6a6158;}
+.menu-item .n .sub + .en{margin-top:0;}
+.menu-item .p.wines{display:flex; flex-direction:column; align-items:flex-end; gap:1px;}
+.menu-item .p.wines small{font-size:10.5px; font-weight:400; color:var(--gris);}
+.menu-item .item-tag.tag-new{width:26px; height:12px;}
+.menu-line{text-align:center; font-size:13px; font-weight:500; padding:2px 0;}
+.menu-line.v-title{font-family:var(--font-t); font-size:22px; font-weight:700; margin-top:6px;}
+.menu-line.v-title em{font-style:normal; color:var(--or-fonce);}
+.menu-line.v-sub, .menu-line.v-small{font-size:11.5px; font-weight:300; font-style:italic; color:var(--gris);}
+.menu-line.v-or{font-size:12px; font-style:italic; font-weight:300; color:var(--gris);}
