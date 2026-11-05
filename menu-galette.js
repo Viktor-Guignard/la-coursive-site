@@ -1,12 +1,12 @@
 /* La carte de La Galette sur le site vitrine : lit la version PUBLIÉE
-   (published.json du repo La-galette) et l'affiche par onglets
-   (La carte · Pizzas · À emporter…), comme la carte de la Coursive. */
+   (published.json servi par carte.vikto-labs.fr, la même que celle du QR code)
+   et l'affiche par onglets (La carte · Pizzas · À emporter…), comme la carte de la Coursive. */
 
 (function () {
-  const OWNER = 'Viktor-Guignard', REPO = 'La-galette', BRANCH = 'main';
-  const RAW = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/published.json`;
-  const PUBLIC_MENU_URL = 'carte-galette/carte.html';
-  const ASSET_BASE = 'carte-galette/';
+  const CARTE = 'https://carte.vikto-labs.fr/la-galette';
+  const RAW = CARTE + '/published.json';
+  const PUBLIC_MENU_URL = CARTE;
+  const ASSET_BASE = CARTE + '/';
   /* cartes montrées sur le site, dans cet ordre (les autres restent sur la page du QR) */
   const SHOW = ['carte', 'pizzas', 'emporter'];
   const LABELS = { carte: 'La carte', pizzas: 'Pizzas', emporter: 'À emporter' };

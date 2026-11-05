@@ -14,20 +14,20 @@
 <meta property="og:image" content="https://viktor-guignard.github.io/la-coursive-site/presentation/apercu.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<link rel="icon" href="carte-galette/mobile/assets/icon-192.png">
-<link rel="preload" href="carte-galette/assets/fonts/Fraunces-Italic.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="preload" href="carte-galette/assets/fonts/Jost-Regular.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="preload" href="carte-galette/assets/fonts/Jost-Medium.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="icon" href="presentation/assets/icon-192.png">
+<link rel="preload" href="presentation/assets/fonts/Fraunces-Italic.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="presentation/assets/fonts/Jost-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="presentation/assets/fonts/Jost-Medium.ttf" as="font" type="font/ttf" crossorigin>
 <style>
 /* Page envoyée à Valérie pour valider la nouvelle présentation des cartes.
    Identité « alpage » des cartes : fond blanc, encre, sarrasin, titres Fraunces italique, texte Jost.
    Sans JavaScript : tout s'affiche, l'interrupteur Avant / Après fonctionne (boutons radio),
    les images s'ouvrent en grand. Le script ajoute seulement la visionneuse et le lancement de la vidéo. */
-@font-face{font-family:'Fraunces';font-style:italic;font-weight:500;src:url('carte-galette/assets/fonts/Fraunces-Italic.ttf') format('truetype');font-display:swap}
-@font-face{font-family:'Fraunces';font-style:normal;font-weight:600;src:url('carte-galette/assets/fonts/Fraunces-SemiBold.ttf') format('truetype');font-display:swap}
-@font-face{font-family:'Jost';font-style:normal;font-weight:400;src:url('carte-galette/assets/fonts/Jost-Regular.ttf') format('truetype');font-display:swap}
-@font-face{font-family:'Jost';font-style:normal;font-weight:500;src:url('carte-galette/assets/fonts/Jost-Medium.ttf') format('truetype');font-display:swap}
-@font-face{font-family:'Jost';font-style:normal;font-weight:600;src:url('carte-galette/assets/fonts/Jost-SemiBold.ttf') format('truetype');font-display:swap}
+@font-face{font-family:'Fraunces';font-style:italic;font-weight:500;src:url('presentation/assets/fonts/Fraunces-Italic.ttf') format('truetype');font-display:swap}
+@font-face{font-family:'Fraunces';font-style:normal;font-weight:600;src:url('presentation/assets/fonts/Fraunces-SemiBold.ttf') format('truetype');font-display:swap}
+@font-face{font-family:'Jost';font-style:normal;font-weight:400;src:url('presentation/assets/fonts/Jost-Regular.ttf') format('truetype');font-display:swap}
+@font-face{font-family:'Jost';font-style:normal;font-weight:500;src:url('presentation/assets/fonts/Jost-Medium.ttf') format('truetype');font-display:swap}
+@font-face{font-family:'Jost';font-style:normal;font-weight:600;src:url('presentation/assets/fonts/Jost-SemiBold.ttf') format('truetype');font-display:swap}
 
 :root{
   --ink:#26211d;          /* encre des cartes */
@@ -54,13 +54,13 @@ svg.i{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-widt
 /* ---------- En-tête : logo entre les crêtes, comme sur les cartes ---------- */
 .hero{max-width:880px;margin:0 auto;padding:32px var(--gutter) 8px;text-align:center}
 .crest{--h:clamp(34px,10.5vw,62px);display:grid;grid-template-columns:minmax(0,calc(var(--h)*268/56)) auto minmax(0,calc(var(--h)*268/56));justify-content:center;align-items:end;column-gap:clamp(8px,2.6vw,14px)}
-.crest-side{display:block;height:var(--h);background:url('carte-galette/assets/deco/alpage-crest.svg') no-repeat;background-size:calc(var(--h)*640/56) var(--h)}
+.crest-side{display:block;height:var(--h);background:url('presentation/assets/deco/alpage-crest.svg') no-repeat;background-size:calc(var(--h)*640/56) var(--h)}
 /* chaque côté montre sa chaîne de montagnes, collée au logo ; l'extérieur peut sortir du cadre */
 .crest-side.l{background-position:right calc(var(--h)*-372/56) bottom 0}
 .crest-side.r{background-position:left calc(var(--h)*-372/56) bottom 0}
 .logo{display:block;width:clamp(72px,22vw,112px);height:auto}
 h1{margin:26px auto 0;max-width:15em;font:italic 500 clamp(34px,9.4vw,58px)/1.06 var(--serif);letter-spacing:-.01em;text-wrap:balance}
-.orn{display:block;width:120px;height:12px;margin:14px auto 0;background:url('carte-galette/assets/deco/alpage-orn.svg') center/contain no-repeat}
+.orn{display:block;width:120px;height:12px;margin:14px auto 0;background:url('presentation/assets/deco/alpage-orn.svg') center/contain no-repeat}
 .lead{margin:16px auto 0;max-width:30em;font-size:18px;color:var(--muted);text-wrap:balance}
 
 .ctas{display:grid;gap:12px;max-width:620px;margin:28px auto 0}
@@ -171,7 +171,7 @@ h1{margin:26px auto 0;max-width:15em;font:italic 500 clamp(34px,9.4vw,58px)/1.06
 <header class="hero">
   <div class="crest">
     <span class="crest-side l" aria-hidden="true"></span>
-    <img class="logo" src="carte-galette/assets/logo-noir.png" width="2401" height="1756" alt="La Galette">
+    <img class="logo" src="presentation/assets/logo-noir.png" width="2401" height="1756" alt="La Galette">
     <span class="crest-side r" aria-hidden="true"></span>
   </div>
   <h1>Les nouvelles cartes de La Galette</h1>

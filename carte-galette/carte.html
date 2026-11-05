@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>La Galette · La carte</title>
+<link rel="canonical" href="https://carte.vikto-labs.fr/la-galette">
+<script>
+  /* Ancienne adresse de la carte de La Galette (anciens liens, anciens QR codes).
+     La carte est maintenant sur carte.vikto-labs.fr : on y va tout de suite,
+     en gardant la langue ou la carte demandées (?lang=…, ?menu=…, #…).
+     Garde-fou : revenir ici 3 fois en moins de 30 s veut dire que
+     carte.vikto-labs.fr nous renvoie ici (panne) ; on s'arrête alors et on
+     affiche un message au lieu de tourner en rond. */
+  (function () {
+    var CARTE = 'https://carte.vikto-labs.fr/la-galette';
+    var n = 1, t = Date.now();
+    try {
+      var d = JSON.parse(sessionStorage.getItem('vk-redir-la-galette') || 'null');
+      if (d && t - d.t < 30000) n = d.n + 1;
+      sessionStorage.setItem('vk-redir-la-galette', JSON.stringify({ t: t, n: n }));
+    } catch (e) {}
+    if (n >= 3) { document.documentElement.className = 'panne'; return; }
+    document.documentElement.className = 'depart';
+    location.replace(CARTE + location.search + (/^#jeton=/.test(location.hash) ? '' : location.hash));
+  })();
+</script>
+<style>
+  :root { --bg: #fdfbf6; --fg: #141110; --muted: #6b645b; --accent: #8a6a12; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #141110; --fg: #f6f0e4; --muted: #b5ab9c; --accent: #e3c766; color-scheme: dark; } }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--bg); color: var(--fg);
+         font: 17px/1.5 -apple-system, "Segoe UI", system-ui, sans-serif; }
+  main { box-sizing: border-box; max-width: 30rem; padding: 32px max(20px, env(safe-area-inset-right, 0px)) 32px max(20px, env(safe-area-inset-left, 0px)); text-align: center; }
+  .marque { margin: 0 0 12px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  h1 { margin: 0 0 6px; font-size: 24px; line-height: 1.25; }
+  p { margin: 0 0 14px; }
+  .en { color: var(--muted); }
+  a { color: var(--accent); font-weight: 600; }
+  .depart main, .panne .bouge, .msg-panne { display: none; }
+  .panne .msg-panne { display: block; }
+</style>
+</head>
+<body>
+<main>
+  <p class="marque">La Galette · Méribel</p>
+  <div class="bouge">
+    <h1>La carte a changé d'adresse</h1>
+    <p class="en" lang="en">The menu has moved.</p>
+    <p><a href="https://carte.vikto-labs.fr/la-galette">Ouvrir la carte · Open the menu</a></p>
+  </div>
+  <div class="msg-panne">
+    <h1>La carte est momentanément indisponible</h1>
+    <p class="en" lang="en">The menu is temporarily unavailable.</p>
+    <p><a href="https://carte.vikto-labs.fr/la-galette">Réessayer · Try again</a></p>
+  </div>
+</main>
+</body>
+</html>
