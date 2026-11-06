@@ -10,7 +10,8 @@
   /* cartes montrées sur le site, dans cet ordre (les autres restent sur la page du QR) */
   const SHOW = ['carte', 'pizzas', 'emporter'];
   const LABELS = { carte: 'La carte', pizzas: 'Pizzas', emporter: 'À emporter' };
-  /* langue du visiteur (FR · EN · IT · DE), mémorisée ; traductions stockées dans la carte */
+  /* langue du visiteur, parmi celles du restaurant (i18n.js de carte.vikto-labs.fr :
+     FR · EN · ES · RU pour La Galette), mémorisée ; traductions stockées dans la carte */
   const I18N = window.CarteI18n;
   let LANG = I18N ? I18N.preferred() : 'fr';
   let lastPub = null, activeKey = null;
@@ -21,7 +22,10 @@
     en: { kicker: 'The menu', title: 'Savoyard dishes, pizzas, galettes & crêpes', note: 'Menu kept up to date by the house', net: 'Net prices, service included.', all: 'Open the menu on my phone ↗', updated: ' — updated on ' },
     it: { kicker: 'Il menu', title: 'Cucina savoiarda, pizze, galette e crêpe', note: 'Menu aggiornato dalla casa', net: 'Prezzi netti, servizio incluso.', all: 'Apri il menu sul telefono ↗', updated: ' — aggiornato il ' },
     de: { kicker: 'Die Speisekarte', title: 'Savoyardische Küche, Pizzen, Galettes & Crêpes', note: 'Vom Haus aktuell gehalten', net: 'Nettopreise, Service inbegriffen.', all: 'Speisekarte auf dem Handy öffnen ↗', updated: ' — aktualisiert am ' },
+    es: { kicker: 'La carta', title: 'Cocina saboyana, pizzas, galettes y crêpes', note: 'La casa mantiene la carta al día', net: 'Precios netos, servicio incluido.', all: 'Abrir la carta en mi móvil ↗', updated: ' — actualizada el ' },
+    ru: { kicker: 'Меню', title: 'Савойская кухня, пицца, галеты и блинчики', note: 'Меню регулярно обновляется рестораном', net: 'Цены указаны с учётом обслуживания.', all: 'Открыть меню на телефоне ↗', updated: ' — обновлено ' },
   };
+  const DATE_LOCALES = { fr: 'fr-FR', en: 'en-GB', it: 'it-IT', de: 'de-DE', es: 'es-ES', ru: 'ru-RU' };
 
   function esc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
   const TAG_ICONS = {
@@ -87,6 +91,9 @@
     const mount = document.getElementById('menuMount');
     const P = PAGE[LANG] || PAGE.fr;
     document.querySelectorAll('#carte [data-i18n]').forEach(el => { if (P[el.dataset.i18n]) el.textContent = P[el.dataset.i18n]; });
+    /* langue de la section (césure, lecteurs d'écran) ; le reste de la page reste en français */
+    const sec = document.getElementById('carte');
+    if (sec) sec.lang = LANG;
     const menus = SHOW.map(k => (pub.menus || []).find(m => m.key === k)).filter(m => m && (m.blocks || []).length);
     if (!menus.length) throw new Error('aucune carte publiée');
     mount.innerHTML = '';
@@ -126,7 +133,7 @@
     });
     if (menus.length < 2) tabs.style.display = 'none';
     const dEl = document.getElementById('carteDate');
-    if (dEl && pub.updatedAt) { const d = new Date(pub.updatedAt); if (!isNaN(d)) dEl.textContent = (PAGE[LANG] || PAGE.fr).updated + d.toLocaleDateString({ fr: 'fr-FR', en: 'en-GB', it: 'it-IT', de: 'de-DE' }[LANG] || 'fr-FR'); }
+    if (dEl && pub.updatedAt) { const d = new Date(pub.updatedAt); if (!isNaN(d)) dEl.textContent = (PAGE[LANG] || PAGE.fr).updated + d.toLocaleDateString(DATE_LOCALES[LANG] || 'fr-FR'); }
   }
 
   (async function load() {
