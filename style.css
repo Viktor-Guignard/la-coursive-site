@@ -318,7 +318,8 @@ footer .tiny{font-size:11px; opacity:.65; margin-top:6px;}
      dans sa colonne. Un prix long (« Petit 17 / Grand 22 € ») passe sur 2 lignes, à droite, sans écraser le plat. */
   .menu-item{flex-wrap:nowrap;}
   .menu-item .n{flex:1 1 auto; min-width:0;}
-  .menu-item .dots{flex:0 0 14px; min-width:14px;}
+  .menu-item{gap:14px;}
+  .menu-item .dots{display:none;}   /* trop courts sur téléphone : pas de pointillés */
   .menu-item .p{flex:0 0 auto; white-space:nowrap; text-align:right;}
   .menu-item .p.long{white-space:normal; max-width:42%; flex-shrink:1;}
 }
