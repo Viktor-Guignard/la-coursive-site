@@ -35,7 +35,7 @@ function renderMenu(blocks, updatedAt){
       case 'item': {
         const el = document.createElement('div'); el.className='menu-item';
         const tags = (b.tags||[]).map(t => TAG_ICONS[t] ? `<img class="item-tag" src="${assetUrl('assets/'+TAG_ICONS[t].key)}" alt="${TAG_ICONS[t].label}" title="${TAG_ICONS[t].label}">` : '').join('');
-        el.innerHTML = `<div class="n">${esc(b.fr)}${tags}${b.en?'<span class="en">'+esc(b.en)+'</span>':''}</div><div class="dots"></div>${b.price?'<div class="p">'+esc(webPrice(b.price))+'</div>':''}`;
+        el.innerHTML = `<div class="n">${esc(b.fr)}${tags}${b.en?'<span class="en">'+esc(b.en)+'</span>':''}</div><div class="dots"></div>${b.price?'<div class="p'+(String(webPrice(b.price)).length>10?' long':'')+'">'+esc(webPrice(b.price))+'</div>':''}`;
         section.appendChild(el); break;
       }
       case 'formule': {

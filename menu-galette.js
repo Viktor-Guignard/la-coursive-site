@@ -55,7 +55,7 @@
           break;
         case 'item': {
           const lines = [b.desc, b.sub].filter(Boolean).map(t => `<span class="sub">${esc(t)}</span>`).join('');
-          add(div('menu-item', `<div class="n">${esc(b.fr)}${tags(b)}${lines}${b.en ? '<span class="en">' + esc(b.en) + '</span>' : ''}</div><div class="dots"></div>${b.price ? '<div class="p">' + esc(PRICE(b.price)) + '</div>' : ''}`));
+          add(div('menu-item', `<div class="n">${esc(b.fr)}${tags(b)}${lines}${b.en ? '<span class="en">' + esc(b.en) + '</span>' : ''}</div><div class="dots"></div>${b.price ? '<div class="p' + (String(PRICE(b.price)).length > 10 ? ' long' : '') + '">' + esc(PRICE(b.price)) + '</div>' : ''}`));
           break;
         }
         case 'winehead':
