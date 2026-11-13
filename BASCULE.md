@@ -1,6 +1,6 @@
 # Bascule de meribel-restaurants.com vers ce site
 
-Préparée le 10/11/2026, PAS ENCORE FAITE : on attend l'accord de Valérie.
+Préparée le 10/11/2026, faite le 13/11/2026 (accord de Valérie). DNS OVH changé le 13/11 : A vers GitHub Pages (4 adresses), www en CNAME vers viktor-guignard.github.io. Mail inchangé.
 
 ## Ce que contient cette branche
 - Les anciennes adresses du site (QR codes et supports déjà imprimés, autres noms de domaine) renvoient vers les nouvelles pages :
