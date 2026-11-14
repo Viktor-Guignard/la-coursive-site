@@ -1,10 +1,9 @@
-/* La carte de la Coursive sur le site vitrine : lit la version PUBLIÉE
-   (published.json du repo la-coursive-carte), carte « carte » (cuisine). */
+/* La carte de la Coursive sur le site vitrine : lit la version PUBLIÉE sur la plateforme
+   Vikto Labs (carte.vikto-labs.fr/la-coursive/published.json, CORS ouvert), carte « carte » (cuisine). */
 
-const OWNER = 'Viktor-Guignard', REPO = 'la-coursive-carte', BRANCH = 'main';
-const RAW = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/published.json`;
-const PUBLIC_MENU_URL = 'https://viktor-guignard.github.io/la-coursive-carte/carte.html';
-const CARTE_ASSET_BASE = 'https://viktor-guignard.github.io/la-coursive-carte/';
+const RAW = 'https://carte.vikto-labs.fr/la-coursive/published.json';
+const PUBLIC_MENU_URL = 'https://carte.vikto-labs.fr/la-coursive';
+const CARTE_ASSET_BASE = 'https://carte.vikto-labs.fr/la-coursive/';
 /* Prix à l'écran : « 23 » sur la carte imprimée → « 23€ » ici, comme les autres cartes. */
 function webPrice(p) { p = String(p || '').trim(); return p && !/€/.test(p) && /\d$/.test(p) ? p + '€' : p; }
 
