@@ -10,22 +10,16 @@
   /* cartes montrées sur le site, dans cet ordre (les autres restent sur la page du QR) */
   const SHOW = ['carte', 'pizzas', 'emporter'];
   const LABELS = { carte: 'La carte', pizzas: 'Pizzas', emporter: 'À emporter' };
-  /* langue du visiteur, parmi celles du restaurant (i18n.js de carte.vikto-labs.fr :
-     FR · EN · ES · RU pour La Galette), mémorisée ; traductions stockées dans la carte */
+  /* langue : celle du site (site-i18n.js : FR · EN · ES · RU, sélecteur dans la barre du haut) ;
+     les traductions des plats sont stockées dans la carte et lues par l'i18n.js de
+     carte.vikto-labs.fr (window.CarteI18n). Les textes autour de la carte (titre, note…)
+     sont traduits par site-i18n.js. */
   const I18N = window.CarteI18n;
-  let LANG = I18N ? I18N.preferred() : 'fr';
+  const SITE = window.SiteI18n;
+  let LANG = SITE ? SITE.lang : (I18N ? I18N.preferred() : 'fr');
   let lastPub = null, activeKey = null, nav = null, lastQuery = '';
   const PRICE = p => I18N ? I18N.price(p) : p;
-  /* textes de la section « La carte » du site */
-  const PAGE = {
-    fr: { kicker: 'La carte', title: 'Savoyard, pizzas, galettes & crêpes', note: 'Carte tenue à jour par la maison', net: 'Prix nets, service compris.', all: 'Ouvrir la carte sur mon téléphone ↗', updated: ' — mise à jour le ' },
-    en: { kicker: 'The menu', title: 'Savoyard dishes, pizzas, galettes & crêpes', note: 'Menu kept up to date by the house', net: 'Net prices, service included.', all: 'Open the menu on my phone ↗', updated: ' — updated on ' },
-    it: { kicker: 'Il menu', title: 'Cucina savoiarda, pizze, galette e crêpe', note: 'Menu aggiornato dalla casa', net: 'Prezzi netti, servizio incluso.', all: 'Apri il menu sul telefono ↗', updated: ' — aggiornato il ' },
-    de: { kicker: 'Die Speisekarte', title: 'Savoyardische Küche, Pizzen, Galettes & Crêpes', note: 'Vom Haus aktuell gehalten', net: 'Nettopreise, Service inbegriffen.', all: 'Speisekarte auf dem Handy öffnen ↗', updated: ' — aktualisiert am ' },
-    es: { kicker: 'La carta', title: 'Cocina saboyana, pizzas, galettes y crêpes', note: 'La casa mantiene la carta al día', net: 'Precios netos, servicio incluido.', all: 'Abrir la carta en mi móvil ↗', updated: ' — actualizada el ' },
-    ru: { kicker: 'Меню', title: 'Савойская кухня, пицца, галеты и блинчики', note: 'Меню регулярно обновляется рестораном', net: 'Цены указаны с учётом обслуживания.', all: 'Открыть меню на телефоне ↗', updated: ' — обновлено ' },
-  };
-  const DATE_LOCALES = { fr: 'fr-FR', en: 'en-GB', it: 'it-IT', de: 'de-DE', es: 'es-ES', ru: 'ru-RU' };
+  const T = (k, fr) => SITE ? SITE.t(k) : fr;
 
   function esc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
   const TAG_ICONS = {
@@ -105,29 +99,11 @@
   function build(pub) {
     lastPub = pub;
     const mount = document.getElementById('menuMount');
-    const P = PAGE[LANG] || PAGE.fr;
-    document.querySelectorAll('#carte [data-i18n]').forEach(el => { if (P[el.dataset.i18n]) el.textContent = P[el.dataset.i18n]; });
-    /* langue de la section (césure, lecteurs d'écran) ; le reste de la page reste en français */
-    const sec = document.getElementById('carte');
-    if (sec) sec.lang = LANG;
     const menus = SHOW.map(k => (pub.menus || []).find(m => m.key === k)).filter(m => m && (m.blocks || []).length);
     if (!menus.length) throw new Error('aucune carte publiée');
     mount.innerHTML = '';
     if (!menus.some(m => m.key === activeKey)) activeKey = menus[0].key;
-    /* drapeaux de langue */
-    if (I18N) {
-      const langs = document.createElement('div');
-      langs.className = 'menu-langs';
-      I18N.LANGS.forEach(l => {
-        const b = document.createElement('button');
-        b.innerHTML = `<span>${l.flag}</span> ${l.short}`;
-        b.title = l.label;
-        b.className = l.code === LANG ? 'active' : '';
-        b.onclick = () => { if (l.code !== LANG) { LANG = l.code; I18N.remember(LANG); build(lastPub); } };
-        langs.appendChild(b);
-      });
-      mount.appendChild(langs);
-    }
+    /* (la langue se choisit dans la barre du haut, pour tout le site) */
     const tabs = document.createElement('div');
     tabs.className = 'menu-tabs';
     mount.appendChild(tabs);
@@ -163,19 +139,33 @@
       nav.setIndex([].concat(...rendered.map(r => r.entries)));
     }
     const dEl = document.getElementById('carteDate');
-    if (dEl && pub.updatedAt) { const d = new Date(pub.updatedAt); if (!isNaN(d)) dEl.textContent = (PAGE[LANG] || PAGE.fr).updated + d.toLocaleDateString(DATE_LOCALES[LANG] || 'fr-FR'); }
+    if (dEl && pub.updatedAt) { const d = new Date(pub.updatedAt); if (!isNaN(d)) dEl.textContent = T('menu.updated', ' — mise à jour le ') + d.toLocaleDateString(SITE ? SITE.locale : 'fr-FR'); }
   }
 
-  (async function load() {
+  let failed = false;
+  function showError() {
     const mount = document.getElementById('menuMount');
+    mount.innerHTML = `<div class="menu-error">${esc(T('menu.error', 'La carte complète est disponible ici :'))}<br>
+      <a href="${PUBLIC_MENU_URL}?lang=${LANG}" target="_blank" rel="noopener">${esc(T('menu.errorLink', 'Voir la carte ↗'))}</a></div>`;
+  }
+
+  /* changement de langue du site : la carte se redessine (onglet et recherche conservés) */
+  if (SITE) SITE.onChange(l => {
+    LANG = l;
+    if (lastPub) { try { build(lastPub); } catch (e) { console.warn('carte indisponible', e); showError(); } }
+    else if (failed) showError();
+  });
+
+  (async function load() {
     try {
       const res = await fetch(RAW + '?t=' + Date.now(), { cache: 'no-store' });
       if (!res.ok) throw new Error('published ' + res.status);
       build(await res.json());
     } catch (err) {
       console.warn('carte indisponible', err);
-      mount.innerHTML = `<div class="menu-error">La carte complète est disponible ici :<br>
-        <a href="${PUBLIC_MENU_URL}" target="_blank" rel="noopener">Voir la carte ↗</a></div>`;
+      failed = true;
+      lastPub = null;
+      showError();
     }
   })();
 })();

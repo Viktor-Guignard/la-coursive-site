@@ -3,12 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Méribel Restaurants — La Coursive des Alpes · La Galette</title>
-<meta name="description" content="Deux restaurants, deux ambiances au centre de Méribel : La Coursive des Alpes (restaurant & lounge bar) et La Galette (savoyard, pizzéria, crêperie).">
+<title data-i18n="home.title">Méribel Restaurants — La Coursive des Alpes · La Galette</title>
+<meta name="description" content="Deux restaurants, deux ambiances au centre de Méribel : La Coursive des Alpes (restaurant & lounge bar) et La Galette (savoyard, pizzéria, crêperie)." data-i18n-attr="content:home.desc">
+<link rel="alternate" hreflang="fr" href="https://meribel-restaurants.com/?lang=fr">
+<link rel="alternate" hreflang="en" href="https://meribel-restaurants.com/?lang=en">
+<link rel="alternate" hreflang="es" href="https://meribel-restaurants.com/?lang=es">
+<link rel="alternate" hreflang="ru" href="https://meribel-restaurants.com/?lang=ru">
+<link rel="alternate" hreflang="x-default" href="https://meribel-restaurants.com/">
 <link rel="icon" href="img/logo-meribel.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=10">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500&family=Poppins:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=12">
+<script src="site-i18n.js?v=1"></script>
 </head>
 <body>
 
@@ -17,11 +23,11 @@
     <img src="img/logo-meribel.svg" alt="">
     <span>Méribel <em>Restaurants</em></span>
   </a>
-  <button id="burger" aria-label="Menu" onclick="document.getElementById('nav').classList.toggle('open')">
+  <button id="burger" aria-label="Menu" data-i18n-attr="aria-label:nav.menu" onclick="document.getElementById('nav').classList.toggle('open')">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-links">
-    <a href="index.html" class="active">Accueil</a>
+    <a href="index.html" class="active" data-i18n="nav.home">Accueil</a>
 <!-- IGLOO MASQUÉ — retirer ce commentaire pour réafficher
     <a href="igloo.html">L'Igloo</a>
 -->
@@ -31,9 +37,9 @@
 </nav>
 
 <header class="hero-light">
-  <p class="kicker">Méribel · Savoie</p>
-  <h1>Deux restaurants,<br>deux ambiances</h1>
-  <p class="hero-sub">Deux personnalités, deux raisons de venir — au cœur de la station.</p>
+  <p class="kicker" data-i18n="home.kicker">Méribel · Savoie</p>
+  <h1 data-i18n="home.h1">Deux restaurants,<br>deux ambiances</h1>
+  <p class="hero-sub" data-i18n="home.sub">Deux personnalités, deux raisons de venir — au cœur de la station.</p>
 </header>
 
 <div class="resto-cards">
@@ -50,18 +56,18 @@
   <a class="resto-card" href="coursive.html">
     <img src="img/logo-or.png" alt="La Coursive des Alpes">
     <h3>La Coursive des Alpes</h3>
-    <div class="type">Restaurant · Lounge bar</div>
-    <p class="desc">La nouvelle surprise du centre de Méribel, dans l'ancien cinéma : cuisine maison du chef Laurent Hillairet, bar cosy.</p>
+    <div class="type" data-i18n="home.coursive.type">Restaurant · Lounge bar</div>
+    <p class="desc" data-i18n="home.coursive.desc">La nouvelle surprise du centre de Méribel, dans l'ancien cinéma : cuisine maison du chef Laurent Hillairet, bar cosy.</p>
     <div class="tel">04 79 06 44 97</div>
-    <div class="go">Découvrir →</div>
+    <div class="go" data-i18n="home.go">Découvrir →</div>
   </a>
   <a class="resto-card" href="galette.html">
     <img src="img/logo-galette.jpg" alt="La Galette">
     <h3>La Galette</h3>
-    <div class="type">Savoyard · Pizzéria · Crêperie</div>
-    <p class="desc">Les spécialités savoyardes de la maison, pizzas, galettes et crêpes, dans un cadre typique et une ambiance accueillante.</p>
+    <div class="type" data-i18n="home.galette.type">Savoyard · Pizzéria · Crêperie</div>
+    <p class="desc" data-i18n="home.galette.desc">Les spécialités savoyardes de la maison, pizzas, galettes et crêpes, dans un cadre typique et une ambiance accueillante.</p>
     <div class="tel">04 79 08 53 90</div>
-    <div class="go">Découvrir →</div>
+    <div class="go" data-i18n="home.go">Découvrir →</div>
   </a>
 </div>
 
@@ -88,8 +94,8 @@
     </div>
   </div>
   <div class="base">
-    <p>Méribel Restaurants — deux maisons, une même exigence.</p>
-    <p class="tiny">Photographies © Alexandre Gallego</p>
+    <p data-i18n="foot.base">Méribel Restaurants — deux maisons, une même exigence.</p>
+    <p class="tiny" data-i18n="foot.photos">Photographies © Alexandre Gallego</p>
   </div>
 </footer>
 

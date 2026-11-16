@@ -9,7 +9,7 @@
   --blanc:#fdfbf6;
   --gris:#8d857a;
   --font-t:'Playfair Display', serif;
-  --font-b:'Poppins', sans-serif;
+  --font-b:'Poppins', 'Montserrat', sans-serif;   /* Montserrat : cyrillique (site en russe) */
 }
 
 *{box-sizing:border-box;}
@@ -67,6 +67,45 @@ h1,h2,h3{font-family:var(--font-t); font-weight:700; line-height:1.12; margin:0 
 #nav.open #burger span:nth-child(1){transform:translateY(7px) rotate(45deg);}
 #nav.open #burger span:nth-child(2){opacity:0;}
 #nav.open #burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* ---------- Langue du site (site-i18n.js) : drapeaux + codes ----------
+   Desktop large : les 4 langues côte à côte. En dessous : bouton (langue en cours) + liste. */
+.lang-switch{position:relative; flex:0 0 auto;}
+.lang-switch .flag{width:20px; height:14px; border-radius:2px; box-shadow:0 0 0 1px rgba(246,240,228,.22); flex:0 0 auto; object-fit:cover;}
+.lang-current{
+  display:flex; align-items:center; gap:7px; height:38px; padding:0 10px 0 11px; cursor:pointer;
+  background:none; border:1px solid rgba(246,240,228,.35); border-radius:8px;
+  color:var(--creme); font-family:var(--font-b); font-size:12.5px; font-weight:500; letter-spacing:.08em;
+}
+.lang-current:hover{border-color:var(--or-clair);}
+.lang-current .caret{width:9px; height:6px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; opacity:.75; transition:transform .15s;}
+.lang-switch.open .lang-current .caret{transform:rotate(180deg);}
+.lang-list{
+  display:none; position:absolute; right:0; top:calc(100% + 12px); z-index:110;
+  min-width:172px; margin:0; padding:6px; list-style:none;
+  background:#141110; border:1px solid rgba(201,162,39,.35); border-radius:10px;
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+}
+.lang-switch.open .lang-list{display:block;}
+.lang-list a{
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:6px;
+  color:var(--creme); text-decoration:none; font-size:13px; font-weight:500; letter-spacing:.08em;
+}
+.lang-list a .name{margin-left:auto; padding-left:12px; font-weight:300; letter-spacing:0; opacity:.7;}
+.lang-list a:hover{background:rgba(246,240,228,.08);}
+.lang-list a[aria-current]{color:var(--or-clair); background:rgba(201,162,39,.14);}
+.lang-current:focus-visible, .lang-list a:focus-visible{outline:2px solid var(--or-clair); outline-offset:2px;}
+@media (min-width:1180px){
+  .lang-current{display:none;}
+  .lang-list, .lang-switch.open .lang-list{
+    display:flex; position:static; gap:2px; min-width:0; padding:0;
+    background:none; border:0; box-shadow:none;
+  }
+  .lang-list a{gap:6px; padding:6px 7px; font-size:11.5px; opacity:.8;}
+  .lang-list a:hover{opacity:1;}
+  .lang-list a[aria-current]{opacity:1;}
+  .lang-list a .name{display:none;}
+}
 
 /* ---------- Boutons ---------- */
 .btn{
@@ -166,6 +205,7 @@ h1,h2,h3{font-family:var(--font-t); font-weight:700; line-height:1.12; margin:0 
 .menu-item .n .en{display:block; font-size:11.5px; font-style:italic; font-weight:300; color:var(--gris);}
 .menu-item .dots{flex:1; border-bottom:1px dotted #c8bfa8; min-width:16px; transform:translateY(-4px);}
 .menu-item .p{font-size:13.5px; font-weight:600; color:var(--or-fonce); white-space:nowrap;}
+.menu-item .p .pp{white-space:nowrap;}
 .item-tag{width:13px; height:13px; margin-left:5px; vertical-align:-2px; display:inline-block;}
 .menu-image{display:flex; justify-content:center; margin:8px 0 14px;}
 .menu-image img{max-width:100%; height:auto;}
@@ -260,6 +300,9 @@ footer .tiny{font-size:11px; opacity:.65; margin-top:6px;}
     padding:8px 0 12px;
   }
   #nav.open .nav-links{display:flex;}
+  /* barre : logo … langue · burger · téléphone */
+  .nav-brand{order:-2;}
+  .lang-switch{order:-1;}
   .nav-links a{padding:13px 26px; border-bottom:none; font-size:14px;}
   .nav-links a.active{background:rgba(201,162,39,.12);}
 
@@ -284,6 +327,7 @@ footer .tiny{font-size:11px; opacity:.65; margin-top:6px;}
   .strip{grid-template-columns:1fr;}
   .nav-cta{padding:8px 12px; font-size:12.5px;}
   .nav-brand span{display:none;}
+  #nav{gap:10px;}
   .btn.big{font-size:16px; padding:15px 28px;}
   .hero-actions .btn{width:100%; text-align:center;}
   .fiche .cartes-btns .btn{width:100%; text-align:center;}
@@ -308,9 +352,6 @@ footer .tiny{font-size:11px; opacity:.65; margin-top:6px;}
 .menu-line.v-title em{font-style:normal; color:var(--or-fonce);}
 .menu-line.v-sub, .menu-line.v-small{font-size:11.5px; font-weight:300; font-style:italic; color:var(--gris);}
 .menu-line.v-or{font-size:12px; font-style:italic; font-weight:300; color:var(--gris);}
-.menu-langs{display:flex; justify-content:center; gap:6px; margin:-8px 0 16px; flex-wrap:wrap;}
-.menu-langs button{font-family:var(--font-b); font-size:12px; font-weight:500; background:none; border:1px solid #e0d5b8; border-radius:20px; padding:5px 11px; cursor:pointer; color:var(--noir);}
-.menu-langs button.active{border-color:var(--or-fonce); color:var(--or-fonce); background:rgba(201,162,39,.08);}
 .menu-cols.one-col{columns:1; max-width:720px; margin:0 auto;}
 .menu-item .n .sub{text-transform:none;}
 @media (max-width:600px){
