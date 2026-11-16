@@ -14,7 +14,7 @@
      FR · EN · ES · RU pour La Galette), mémorisée ; traductions stockées dans la carte */
   const I18N = window.CarteI18n;
   let LANG = I18N ? I18N.preferred() : 'fr';
-  let lastPub = null, activeKey = null;
+  let lastPub = null, activeKey = null, nav = null, lastQuery = '';
   const PRICE = p => I18N ? I18N.price(p) : p;
   /* textes de la section « La carte » du site */
   const PAGE = {
@@ -37,13 +37,17 @@
   const tags = b => (b.tags || []).map(t => TAG_ICONS[t]
     ? `<img class="item-tag${t === 'new' ? ' tag-new' : ''}" src="${ASSET_BASE}assets/${TAG_ICONS[t].key}" alt="${I18N ? I18N.ui(LANG, t) : TAG_ICONS[t].label}" title="${I18N ? I18N.ui(LANG, t) : TAG_ICONS[t].label}">` : '').join('');
 
-  function renderMenu(blocks) {
+  /* rend une carte ; renvoie aussi ses catégories (puces) et ses lignes cherchables (recherche) */
+  function renderMenu(blocks, menuKey, tabLabel, showTab) {
     const cols = document.createElement('div');
     cols.className = 'menu-cols' + ((blocks || []).filter(b => b.type === 'section').length > 8 ? ' one-col' : '');
     let section = null, wineCols = ['37,5 cl', '50 cl', '75 cl', '150 cl'];
+    const sections = [], entries = [];
+    let group = menuKey + ':0', groupTitle = showTab ? esc(tabLabel) : '', nGroup = 0, groupHay = '';  // le titre de la catégorie compte aussi (« pizza » → Nos pizzas)
     const open = html => { section = document.createElement('div'); section.className = 'menu-section'; if (html) section.innerHTML = html; cols.appendChild(section); };
     const add = el => { if (!section) open(''); section.appendChild(el); };
     const div = (cls, html) => { const el = document.createElement('div'); el.className = cls; el.innerHTML = html; return el; };
+    const index = (el, ...texts) => entries.push({ group, title: groupTitle, hay: texts.concat(groupHay).filter(Boolean).join(' '), el });
 
     (blocks || []).forEach(b0 => {
       if (b0.hidden) return;              // plat masqué temporairement : jamais affiché
@@ -52,10 +56,16 @@
       switch (b.type) {
         case 'section':
           open(`<h3>${esc(b.fr)}${tags(b)}</h3>`);
+          sections.push({ label: String(b.fr || ''), el: section });
+          group = menuKey + ':' + (++nGroup);
+          groupTitle = (b.fr ? esc(b.fr) : '') + (showTab ? `${b.fr ? ' ' : ''}<span class="tab">${b.fr ? '· ' : ''}${esc(tabLabel)}</span>` : '');
+          groupHay = [b.fr, b0.fr].filter(Boolean).join(' ');
           break;
         case 'item': {
           const lines = [b.desc, b.sub].filter(Boolean).map(t => `<span class="sub">${esc(t)}</span>`).join('');
-          add(div('menu-item', `<div class="n">${esc(b.fr)}${tags(b)}${lines}${b.en ? '<span class="en">' + esc(b.en) + '</span>' : ''}</div><div class="dots"></div>${b.price ? '<div class="p' + (String(PRICE(b.price)).length > 10 ? ' long' : '') + '">' + esc(PRICE(b.price)) + '</div>' : ''}`));
+          const el = div('menu-item', `<div class="n">${esc(b.fr)}${tags(b)}${lines}${b.en ? '<span class="en">' + esc(b.en) + '</span>' : ''}</div><div class="dots"></div>${b.price ? '<div class="p' + (String(PRICE(b.price)).length > 10 ? ' long' : '') + '">' + esc(PRICE(b.price)) + '</div>' : ''}`);
+          add(el);
+          index(el, b.fr, b.desc, b.sub, b.en, b0.fr, b0.desc, b0.sub, b0.en);
           break;
         }
         case 'winehead':
@@ -63,27 +73,33 @@
           break;
         case 'wine': {
           const p = ['p1', 'p2', 'p3', 'p4'].map((f, i) => b[f] ? `<span><small>${esc(wineCols[i] || '')}</small> ${esc(PRICE(b[f]))}</span>` : '').filter(Boolean).join('');
-          add(div('menu-item', `<div class="n">${esc(b.fr)}${tags(b)}${b.desc ? '<span class="sub">' + esc(b.desc) + '</span>' : ''}</div><div class="dots"></div><div class="p wines">${p}</div>`));
+          const el = div('menu-item', `<div class="n">${esc(b.fr)}${tags(b)}${b.desc ? '<span class="sub">' + esc(b.desc) + '</span>' : ''}</div><div class="dots"></div><div class="p wines">${p}</div>`);
+          add(el);
+          index(el, b.fr, b.desc, b0.fr, b0.desc);
           break;
         }
         case 'formule': {
           const el = div('menu-formule' + (b.heading ? ' heading' : ''), esc(b.text));
           if (b.color) el.style.color = b.color;
           add(el);
+          index(el, b.text, b0.text);
           break;
         }
-        case 'line':
+        case 'line': {
           if (b.variant === 'title') open('');
           if (b.variant === 'stars') break;
-          add(div('menu-line v-' + (b.variant || 'main'), esc(b.text) + (b.price ? ' <em>' + esc(PRICE(b.price)) + '</em>' : '')));
+          const el = div('menu-line v-' + (b.variant || 'main'), esc(b.text) + (b.price ? ' <em>' + esc(PRICE(b.price)) + '</em>' : ''));
+          add(el);
+          index(el, b.text, b0.text);
           break;
+        }
         case 'note':
           add(div('menu-note', esc(b.text)));
           break;
         /* logo, photos, colonnes, bandeaux, en-tête d'affiche : réservés à l'imprimé */
       }
     });
-    return cols;
+    return { cols, sections, entries };
   }
 
   function build(pub) {
@@ -115,12 +131,20 @@
     const tabs = document.createElement('div');
     tabs.className = 'menu-tabs';
     mount.appendChild(tabs);
+    /* recherche (toutes les cartes) puis puces des catégories de la carte affichée */
+    if (nav) nav.destroy();
+    nav = window.MenuNav ? window.MenuNav.create({ lang: LANG, mount, query: lastQuery, onQuery: q => { lastQuery = q; } }) : null;
+    if (nav) mount.append(nav.search, nav.chips);
+    const rendered = [];
     const panels = menus.map((m, i) => {
       const btn = document.createElement('button');
-      btn.textContent = I18N ? I18N.menuLabel(m.key, LANG, LABELS[m.key]) : (LABELS[m.key] || m.label || m.key);
+      const label = I18N ? I18N.menuLabel(m.key, LANG, LABELS[m.key]) : (LABELS[m.key] || m.label || m.key);
+      btn.textContent = label;
       btn.className = m.key === activeKey ? 'active' : '';
       tabs.appendChild(btn);
-      const panel = renderMenu(m.blocks);
+      const r = renderMenu(m.blocks, m.key, label, menus.length > 1);
+      rendered.push(r);
+      const panel = r.cols;
       panel.style.display = m.key === activeKey ? '' : 'none';
       mount.appendChild(panel);
       btn.addEventListener('click', () => {
@@ -128,10 +152,16 @@
         btn.classList.add('active');
         panels.forEach((p, j) => p.style.display = j === i ? '' : 'none');
         activeKey = m.key;
+        if (nav) nav.setSections(r.sections);
       });
       return panel;
     });
     if (menus.length < 2) tabs.style.display = 'none';
+    if (nav) {
+      mount.appendChild(nav.results);
+      nav.setSections(rendered[menus.findIndex(m => m.key === activeKey)].sections);
+      nav.setIndex([].concat(...rendered.map(r => r.entries)));
+    }
     const dEl = document.getElementById('carteDate');
     if (dEl && pub.updatedAt) { const d = new Date(pub.updatedAt); if (!isNaN(d)) dEl.textContent = (PAGE[LANG] || PAGE.fr).updated + d.toLocaleDateString(DATE_LOCALES[LANG] || 'fr-FR'); }
   }

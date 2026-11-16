@@ -15,13 +15,22 @@ const TAG_ICONS = {
   spec: { key:'icon-spec.svg', label:'Spécialité de la maison' },
 };
 
+/* langue des textes de recherche : la carte est bilingue FR / EN */
+const NAV_LANG = (() => { const l = (navigator.languages && navigator.languages[0]) || navigator.language || 'fr'; return /^fr/i.test(l) ? 'fr' : 'en'; })();
+
 function renderMenu(blocks, updatedAt){
   const mount = document.getElementById('menuMount');
   mount.innerHTML = '';
+  /* recherche dans la carte et puces des catégories (menu-nav.js) */
+  const nav = window.MenuNav ? window.MenuNav.create({ lang: NAV_LANG, mount }) : null;
+  if(nav) mount.append(nav.search, nav.chips);
   const cols = document.createElement('div');
   cols.className = 'menu-cols';
   mount.appendChild(cols);
   let section = null;
+  const sections = [], entries = [];
+  let group = 0, groupTitle = '', groupHay = '';  // le titre de la catégorie compte aussi
+  const index = (el, ...texts) => entries.push({ group, title: groupTitle, hay: texts.concat(groupHay).filter(Boolean).join(' '), el });
   const openSection = (html) => { section = document.createElement('div'); section.className='menu-section'; if(html) section.innerHTML=html; cols.appendChild(section); };
   openSection('');
 
@@ -30,17 +39,23 @@ function renderMenu(blocks, updatedAt){
     switch(b.type){
       case 'section':
         openSection(`<h3>${esc(b.fr)}${b.en!=null&&b.en!=='' ? ' <span class="en">/ '+esc(b.en)+'</span>' : ''}</h3>`);
+        sections.push({ label: String((NAV_LANG === 'en' && b.en) || b.fr || ''), el: section });
+        group++; groupTitle = section.firstChild ? section.firstChild.innerHTML : ''; groupHay = [b.fr, b.en].filter(Boolean).join(' ');
         break;
       case 'item': {
         const el = document.createElement('div'); el.className='menu-item';
         const tags = (b.tags||[]).map(t => TAG_ICONS[t] ? `<img class="item-tag" src="${assetUrl('assets/'+TAG_ICONS[t].key)}" alt="${TAG_ICONS[t].label}" title="${TAG_ICONS[t].label}">` : '').join('');
         el.innerHTML = `<div class="n">${esc(b.fr)}${tags}${b.en?'<span class="en">'+esc(b.en)+'</span>':''}</div><div class="dots"></div>${b.price?'<div class="p'+(String(webPrice(b.price)).length>10?' long':'')+'">'+esc(webPrice(b.price))+'</div>':''}`;
-        section.appendChild(el); break;
+        section.appendChild(el);
+        index(el, b.fr, b.en, b.desc, b.sub);
+        break;
       }
       case 'formule': {
         const el = document.createElement('div'); el.className='menu-formule'+(b.heading?' heading':''); el.textContent=b.text;
         if(b.color) el.style.color = b.color;
-        section.appendChild(el); break;
+        section.appendChild(el);
+        index(el, b.text);
+        break;
       }
       case 'note': {
         const el = document.createElement('div'); el.className='menu-note'; el.textContent=b.text; section.appendChild(el); break;
@@ -52,6 +67,12 @@ function renderMenu(blocks, updatedAt){
       }
     }
   });
+
+  if(nav){
+    mount.appendChild(nav.results);
+    nav.setSections(sections);
+    nav.setIndex(entries);
+  }
 
   const dEl = document.getElementById('carteDate');
   if(dEl && updatedAt){ const d=new Date(updatedAt); if(!isNaN(d)) dEl.textContent = ' — mise à jour le '+d.toLocaleDateString('fr-FR'); }
